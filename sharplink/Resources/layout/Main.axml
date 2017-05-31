@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent">
+
+  <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="0"
+    android:text="请输入服务器ID"/>
+  <EditText
+    android:id="@+id/toxid"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_weight="0"/>
+  <TextView 
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="0"
+    android:text="输入服务器端口"/>
+  <EditText
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/port"/>
+  <Button
+    android:id="@+id/myButton"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="0"
+    android:text="Connect" />
+  
+  <ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    android:id="@+id/status_scroll"
+    android:background="#FF000000">
+
+    <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="#FF000000"
+      android:id="@+id/console"
+      android:textColor="#FF00FF00"
+      android:padding="10dp"
+      android:scrollbars = "vertical"
+        />
+  </ScrollView>
+
+</LinearLayout>
