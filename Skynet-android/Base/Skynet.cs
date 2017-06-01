@@ -76,11 +76,11 @@ namespace SkynetAndroid.Base
 					Thread.Sleep (2000);
 					if (tox.IsConnected) {
 						Console.WriteLine ("From Server " + httpPort + ":" + "tox is connected.");
-						Utils.Utils.Log("From Server " + httpPort + ":" + "tox is connected.");
+						Utils.Utils.Log("From Server " + httpPort + ":" + "tox is connected.", true);
 						offLineCount = 0;
 						break;
 					}else {
-						Utils.Utils.Log ("Event: tox is offline");
+						Utils.Utils.Log ("Event: tox is offline", true);
 						offLineCount ++;
 					}
 					if(offLineCount > 10){
@@ -133,7 +133,7 @@ namespace SkynetAndroid.Base
 						} else
 							Thread.Sleep (1);
 					}
-                    Utils.Utils.Log("Event: tox is offline");
+                    Utils.Utils.Log("Event: tox is offline", true);
                     onlineStatus = false;
                     Thread.Sleep (1000);
 				}
@@ -146,7 +146,7 @@ namespace SkynetAndroid.Base
 			string baseUrl = "http://localhost:" + httpPort + "/";
 			//WebApp.Start<StartUp> (url: baseUrl);
 			Console.WriteLine ("Server listening on " + httpPort);
-			Utils.Utils.Log ("Server listening on " + httpPort);
+			Utils.Utils.Log ("Server listening on " + httpPort, true);
 			allInstance.Add (this);
 		}
 
@@ -213,7 +213,7 @@ namespace SkynetAndroid.Base
 			Console.WriteLine ("From Server " + httpPort + " ");
 			Console.WriteLine ("Received friend req: " + e.PublicKey);
 			Utils.Utils.Log ("From Server " + httpPort + " ");
-			Utils.Utils.Log ("Received friend req: " + e.PublicKey);
+			Utils.Utils.Log ("Received friend req: " + e.PublicKey, true);
 		}
 
 		void tox_OnFriendConnectionStatusChanged (object sender, ToxEventArgs.FriendConnectionStatusEventArgs e)
@@ -339,7 +339,7 @@ namespace SkynetAndroid.Base
 						maxCount = 200 * 1000; // first time wait for 200s
 					while (tox.GetFriendConnectionStatus (friendNum) == ToxConnectionStatus.None && waitCount < maxCount) {
 						if (waitCount % 1000 == 0)
-							Utils.Utils.Log ("Event: target is offline " + waitCount / 1000);
+							Utils.Utils.Log ("Event: target is offline " + waitCount / 1000, true);
 						waitCount += 10;
 						Thread.Sleep (10);
 					}

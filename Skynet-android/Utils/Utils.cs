@@ -88,6 +88,20 @@ namespace SkynetAndroid.Utils
         }
 
 		public static void Log(string detail) {
+            //#if (DEBUG)
+            //mActivity.RunOnUiThread(() =>
+            //{
+            //    mlogView.Text = mlogView.Text + "Time: " + UnixTimeNow() + ", " + detail + "\n";
+            //    mScrollView.Post(() =>
+            //    {
+            //        mScrollView.FullScroll(FocusSearchDirection.Down);
+            //    });
+            //});
+            //#endif
+        }
+
+        public static void Log(string detail, bool force)
+        {
             mActivity.RunOnUiThread(() =>
             {
                 mlogView.Text = mlogView.Text + "Time: " + UnixTimeNow() + ", " + detail + "\n";
@@ -98,7 +112,7 @@ namespace SkynetAndroid.Utils
             });
         }
 
-		public static string GetLocalIPAddress()
+        public static string GetLocalIPAddress()
 		{
 			var host = Dns.GetHostEntry(Dns.GetHostName());
 			foreach (var ip in host.AddressList)

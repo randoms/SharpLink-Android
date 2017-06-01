@@ -27,16 +27,19 @@ namespace SharpLinkAndroid
 
 	public class Connection
 	{
-		public void Connect (string[] args)
+        bool runningFlag = true;
+        SkynetAndroid.Base.SkynetAndroid mSkynet = null;
+
+        public void Stop() {
+            runningFlag = false;
+        }
+
+        public void Connect (string[] args)
 		{
 			if (args.Length != 4 && args.Length != 0) {
 				Console.WriteLine ("usage: SharpLink [local_port] [target_tox_id] [target_ip] [target_port]");
 				return;
 			}
-            SkynetAndroid.Base.SkynetAndroid mSkynet = null;
-			string exeDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-			Directory.SetCurrentDirectory(exeDir);
-
 			// Save tox data for server
 			if (args.Length == 0 && File.Exists ("tox.dat")) {
 				mSkynet = new SkynetAndroid.Base.SkynetAndroid ("tox.dat");
@@ -44,10 +47,10 @@ namespace SharpLinkAndroid
 				mSkynet = new SkynetAndroid.Base.SkynetAndroid ();
 				mSkynet.Save ("tox.dat");
 			} else {
-				mSkynet = new SkynetAndroid.Base.SkynetAndroid ();
+                mSkynet = new SkynetAndroid.Base.SkynetAndroid ();
 			}
-            
-			if (args.Length == 4) {
+
+            if (args.Length == 4) {
 				string localPort = args [0];
 				string targetToxId = args [1];
 				string targetIP = args [2];
@@ -59,13 +62,13 @@ namespace SharpLinkAndroid
                     return;
                 }
 
-				// create local socket server
-				IPAddress ip = IPAddress.Parse ("0.0.0.0");
+                // create local socket server
+                IPAddress ip = IPAddress.Parse ("0.0.0.0");
 				var serverSocket = new Socket (AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 				serverSocket.Bind (new IPEndPoint (ip, Convert.ToInt32 (localPort)));
 				serverSocket.Listen (1000);
-				Task.Factory.StartNew (() => {
-					while (true) {
+                Task.Factory.StartNew (() => {
+					while (runningFlag) {
 						Utils.Log ("Event: Waiting socket");
 						List<byte> tempData = new List<byte> ();
 						Socket clientSocket = serverSocket.Accept ();
@@ -74,7 +77,7 @@ namespace SharpLinkAndroid
 							LinkClient mlink = null;
 							string tempConnectId = Guid.NewGuid ().ToString ();
 							Task.Factory.StartNew (() => {
-								while (true) {
+								while (runningFlag) {
 									byte[] buf = new byte[1024 * 512];
 									try {
 										int size = 0;
@@ -235,7 +238,7 @@ namespace SharpLinkAndroid
 							// send response after all handler has been set
 							mSkynet.sendResponse (req.createResponse (Encoding.UTF8.GetBytes ("OK")), new ToxId (req.fromToxId));
 							Task.Factory.StartNew (() => {
-								while (true) {
+								while (runningFlag) {
 									byte[] buf = new byte[1024 * 512];
 									try {
 										Utils.Log ("Event: Start Read Data, Clientid: " + mlink.clientId);
@@ -305,16 +308,18 @@ namespace SharpLinkAndroid
 					}).ForgetOrThrow();
 				} else if (req.toNodeId == "" && req.url == "/handshake") {
 					var response = req.createResponse (Encoding.UTF8.GetBytes ("OK"));
-					Utils.Log ("Event: HandShake from " + response.toToxId + ", MessageID: " + req.uuid);
-					Utils.Log ("Event: Send HandShake response " + response.uuid + ", ToxId: " + response.toToxId);
+					Utils.Log ("Event: HandShake from " + response.toToxId + ", MessageID: " + req.uuid, true);
+					Utils.Log ("Event: Send HandShake response " + response.uuid + ", ToxId: " + response.toToxId, true);
                     Console.WriteLine("Event: HandShake from " + response.toToxId + ", MessageID: " + req.uuid);
                     mSkynet.sendResponse (response, new ToxId (response.toToxId));
 				}
 			});
 
-			while (true) {
-				Thread.Sleep (10);
+			while (runningFlag) {
+				Thread.Sleep (10);  
 			}
+
+            mSkynet.stop();
 		}
 	}
 }

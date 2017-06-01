@@ -34,7 +34,7 @@ namespace SharpLinkAndroid
 
         private async Task<bool> HandShake() {
             string reqid = Guid.NewGuid().ToString();
-            Utils.Log ("Event: Start Handshake, ReqId: " + reqid +", ClientId: " + clientId);
+            Utils.Log ("Event: Start Handshake, ReqId: " + reqid +", ClientId: " + clientId, true);
             Console.WriteLine("Event: Start Handshake, ReqId: " + reqid + ", ClientId: " + clientId);
             bool status;
             var res = await mSkynet.sendRequest(serverToxId, new ToxRequest {
@@ -49,11 +49,11 @@ namespace SharpLinkAndroid
             }, out status);
             
             if (res == null){
-                Utils.Log ("Event: Handshake Failed, ReqId: " + reqid + ", ClientId: " + clientId);
+                Utils.Log ("Event: Handshake Failed, ReqId: " + reqid + ", ClientId: " + clientId, true);
                 return false;
             }
             else {
-                Utils.Log ("Event: Handshake Success, ReqId: " + reqid + ", ClientId: " + clientId);
+                Utils.Log ("Event: Handshake Success, ReqId: " + reqid + ", ClientId: " + clientId, true);
                 Console.WriteLine("Event: Handshake Success, ReqId: " + reqid + ", ClientId: " + clientId);
                 return true;
             }

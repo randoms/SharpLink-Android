@@ -81,42 +81,22 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedNativeLibrary Include="AndroidNativeLibrary\armeabi\libtoxcore.so">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedNativeLibrary>
-    <EmbeddedNativeLibrary Include="AndroidNativeLibrary\armeabi\libtoxdns.so">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedNativeLibrary>
-    <EmbeddedNativeLibrary Include="AndroidNativeLibrary\armeabi\libtoxencryptsave.so">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedNativeLibrary>
-    <EmbeddedNativeLibrary Include="AndroidNativeLibrary\armeabi-v7a\libtoxcore.so">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedNativeLibrary>
-    <EmbeddedNativeLibrary Include="AndroidNativeLibrary\armeabi-v7a\libtoxdns.so">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedNativeLibrary>
-    <EmbeddedNativeLibrary Include="AndroidNativeLibrary\armeabi-v7a\libtoxencryptsave.so">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedNativeLibrary>
-    <EmbeddedNativeLibrary Include="AndroidNativeLibrary\x86\libtoxcore.so">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedNativeLibrary>
-    <EmbeddedNativeLibrary Include="AndroidNativeLibrary\x86\libtoxdns.so">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedNativeLibrary>
-    <EmbeddedNativeLibrary Include="AndroidNativeLibrary\x86\libtoxencryptsave.so">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedNativeLibrary>
-    <EmbeddedNativeLibrary Include="AndroidNativeLibrary\armeabi-v7a\libsodium.so">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedNativeLibrary>
-    <EmbeddedNativeLibrary Include="AndroidNativeLibrary\armeabi\libsodium.so">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedNativeLibrary>
-    <EmbeddedNativeLibrary Include="AndroidNativeLibrary\x86\libsodium.so">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedNativeLibrary>
+    <EmbeddedNativeLibrary Include="lib\arm64-v8a\libsodium.so" />
+    <EmbeddedNativeLibrary Include="lib\arm64-v8a\libtoxcore.so" />
+    <EmbeddedNativeLibrary Include="lib\arm64-v8a\libtoxdns.so" />
+    <EmbeddedNativeLibrary Include="lib\arm64-v8a\libtoxencryptsave.so" />
+    <EmbeddedNativeLibrary Include="lib\armeabi-v7a\libsodium.so" />
+    <EmbeddedNativeLibrary Include="lib\armeabi-v7a\libtoxcore.so" />
+    <EmbeddedNativeLibrary Include="lib\armeabi-v7a\libtoxdns.so" />
+    <EmbeddedNativeLibrary Include="lib\armeabi-v7a\libtoxencryptsave.so" />
+    <EmbeddedNativeLibrary Include="lib\armeabi\libsodium.so" />
+    <EmbeddedNativeLibrary Include="lib\armeabi\libtoxcore.so" />
+    <EmbeddedNativeLibrary Include="lib\armeabi\libtoxdns.so" />
+    <EmbeddedNativeLibrary Include="lib\armeabi\libtoxencryptsave.so" />
+    <AndroidNativeLibrary Include="lib\x86\libsodium.so" />
+    <AndroidNativeLibrary Include="lib\x86\libtoxcore.so" />
+    <AndroidNativeLibrary Include="lib\x86\libtoxdns.so" />
+    <AndroidNativeLibrary Include="lib\x86\libtoxencryptsave.so" />
     <None Include="Resources\AboutResources.txt" />
   </ItemGroup>
   <ItemGroup>
