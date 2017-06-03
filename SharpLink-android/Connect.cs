@@ -28,33 +28,40 @@ namespace SharpLinkAndroid
 	public class Connection
 	{
         bool runningFlag = true;
+        public bool IsConnected { get; private set; }
         SkynetAndroid.Base.SkynetAndroid mSkynet = null;
+        private string targetToxId = "";
+        private int targetPort = 0;
+        private int localPort = 0;
+        private string targetIP = "";
+        
 
         public void Stop() {
             runningFlag = false;
         }
 
+        public Connection() {
+            mSkynet = new SkynetAndroid.Base.SkynetAndroid();
+        }
+
         public void Connect (string[] args)
 		{
-			if (args.Length != 4 && args.Length != 0) {
+            if (args.Length != 4 && args.Length != 0) {
 				Console.WriteLine ("usage: SharpLink [local_port] [target_tox_id] [target_ip] [target_port]");
 				return;
 			}
-			// Save tox data for server
-			if (args.Length == 0 && File.Exists ("tox.dat")) {
-				mSkynet = new SkynetAndroid.Base.SkynetAndroid ("tox.dat");
-			} else if (args.Length == 0 && !File.Exists ("tox.dat")) {
-				mSkynet = new SkynetAndroid.Base.SkynetAndroid ();
-				mSkynet.Save ("tox.dat");
-			} else {
-                mSkynet = new SkynetAndroid.Base.SkynetAndroid ();
-			}
 
             if (args.Length == 4) {
-				string localPort = args [0];
-				string targetToxId = args [1];
-				string targetIP = args [2];
-				int targetPort = Convert.ToInt32 (args [3]);
+
+                if (localPort == Convert.ToInt32(args[0]) && targetToxId == args[1] && targetIP == args[2] && targetPort == Convert.ToInt32(args[3])) {
+                    // already started
+                    return;
+                }
+
+				localPort = Convert.ToInt32(args[0]);
+				targetToxId = args [1];
+				targetIP = args [2];
+				targetPort = Convert.ToInt32 (args [3]);
 
                 if (!ToxId.IsValid(targetToxId)) {
                     Console.WriteLine("not a valid id");
@@ -62,10 +69,19 @@ namespace SharpLinkAndroid
                     return;
                 }
 
+                // start check connection task
+                Task.Run(() =>
+                {
+                    while (runningFlag) {
+                        IsConnected = mSkynet.HandShake(new ToxId(targetToxId)).GetAwaiter().GetResult();
+                        Thread.Sleep(20 * 1000);
+                    }
+                });
+
                 // create local socket server
                 IPAddress ip = IPAddress.Parse ("0.0.0.0");
 				var serverSocket = new Socket (AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-				serverSocket.Bind (new IPEndPoint (ip, Convert.ToInt32 (localPort)));
+				serverSocket.Bind (new IPEndPoint (ip, localPort));
 				serverSocket.Listen (1000);
                 Task.Factory.StartNew (() => {
 					while (runningFlag) {
@@ -136,7 +152,7 @@ namespace SharpLinkAndroid
 
 								}
 							},TaskCreationOptions.LongRunning).ForgetOrThrow();
-							mlink = LinkClient.Connect (mSkynet, targetToxId, IPAddress.Parse (targetIP), Convert.ToInt32 (targetPort), 
+							mlink = LinkClient.Connect (mSkynet, targetToxId, IPAddress.Parse (targetIP), targetPort, 
 								// message handler
 								(msg) => {
 									try {

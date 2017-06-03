@@ -9,6 +9,11 @@ using Android.OS;
 using System.Threading.Tasks;
 using SkynetAndroid.Utils;
 using Android.Preferences;
+using sharplink.Services;
+using Android.Graphics;
+using System.Threading;
+using System.Collections.Generic;
+using Android.Media;
 
 namespace sharplink
 {
@@ -19,8 +24,12 @@ namespace sharplink
         Button button;
         ScrollView mscroll;
         EditText serverID;
-        EditText port;
+        EditText portText;
+        TextView status;
         bool connectFlag;
+        ISharedPreferences prefs;
+        private SharpLinkConnection mConnection;
+        bool runningFlag = true;
 
         protected override void OnCreate (Bundle bundle)
 		{
@@ -35,59 +44,152 @@ namespace sharplink
             button = FindViewById<Button>(Resource.Id.myButton);
             mscroll = FindViewById<ScrollView>(Resource.Id.status_scroll);
             serverID = FindViewById<EditText>(Resource.Id.toxid);
-            port = FindViewById<EditText>(Resource.Id.port);
+            portText = FindViewById<EditText>(Resource.Id.port);
+            status = FindViewById<TextView>(Resource.Id.console);
 
-            ISharedPreferences prefs = PreferenceManager.GetDefaultSharedPreferences(this);
+            prefs = PreferenceManager.GetDefaultSharedPreferences(this);
             string serverIDStr = prefs.GetString("toxid", "");
             string portStr = prefs.GetString("port", "");
 
-            Utils.setLogFile(FindViewById<TextView>(Resource.Id.console), mscroll, this);
-            
-            mSharpLink = new SharpLinkAndroid.Connection();
+            if(mConnection == null)
+            {
+                mConnection = new SharpLinkConnection(this);
+            }
+
 
             button.Click += delegate
             {
                 if (connectFlag)
                 {
-                    stopServer();
+                    button.Text = "CONNECT";
+                    serverID.Enabled = true;
+                    portText.Enabled = true;
+                    connectFlag = false;
                     return;
                 }
-                startServer();
+                startServer(serverID.Text, portText.Text);
             };
 
             if ("" != serverIDStr && "" != portStr)
             {
                 serverID.Text = serverIDStr;
-                port.Text = portStr;
-                startServer();
+                portText.Text = portStr;
+                startServer(serverIDStr, portStr);
             }
-        }
 
-        private void stopServer() {
-            Utils.Log("Stop Server", true);
-            button.Text = "CONNECT";
-            serverID.Enabled = true;
-            port.Enabled = true;
-            mSharpLink.Stop();
-            connectFlag = false;
-            return;
-        }
-
-        private void startServer() {
-            Utils.Log("Start Server", true);
+            // 开启定时确认连接状态
             Task.Run(() =>
             {
-                ISharedPreferences prefs1 = PreferenceManager.GetDefaultSharedPreferences(this);
-                ISharedPreferencesEditor editor1 = prefs1.Edit();
-                editor1.PutString("toxid", serverID.Text);
-                editor1.PutString("port", port.Text);
-                editor1.Apply();
-                mSharpLink.Connect(new string[] { "23232", serverID.Text, "127.0.0.1", port.Text });
+                while (runningFlag) {
+                    Thread.Sleep(1000);
+                    if (!mConnection.IsConnected) {
+                        setOnlineStatus(false);
+                        continue;
+                    }
+                    if (mConnection.Binder.IsConnected())
+                    {
+                        setOnlineStatus(true);
+                    }
+                    else
+                    {
+                        setOnlineStatus(false);
+                    }
+                }
             });
+        }
+
+        private void notify() {
+            AudioManager manager = (AudioManager)GetSystemService(AudioService);
+            manager.SetStreamVolume(Stream.Music, 100, 0);
+
+            var notification = RingtoneManager
+                    .GetDefaultUri(RingtoneType.Notification);
+
+            MediaPlayer player = MediaPlayer.Create(this, notification);
+            player.Looping = false;
+            player.Start();
+        }
+
+        private void startServer(string toxid, string port) {
+            Intent serviceToStart = new Intent(this, typeof(SharpLinkService));
+            serviceToStart.PutExtra("toxid", toxid);
+            serviceToStart.PutExtra("port", port);
+            var currentConf = getSharpLinkConf();
+            if (currentConf != null && (toxid != currentConf["toxid"] || port != currentConf["port"]))
+            {
+                Log("Stop Service");
+                StopService(serviceToStart);
+                UnbindService(mConnection);
+            }
+            Log("Start Server");
+            StartService(serviceToStart);
+            BindService(serviceToStart, mConnection, Bind.AutoCreate);
+            ISharedPreferencesEditor editor = prefs.Edit();
+            editor.PutString("toxid", toxid);
+            editor.PutString("port", port);
+            editor.Apply();
+
             connectFlag = true;
             button.Text = "CONNECTED";
             serverID.Enabled = false;
-            port.Enabled = false;
+            portText.Enabled = false;
+        }
+
+        bool previousOnlineStatus = false;
+        private void setOnlineStatus(bool status) {
+            RunOnUiThread(() =>
+            {
+                if (previousOnlineStatus != status) {
+                    notify();
+                    previousOnlineStatus = status;
+                }
+                    
+                if (status)
+                {
+                    button.SetTextColor(Color.Rgb(0x8B, 0xC3, 0x4A));
+                }
+                else
+                {
+                    button.SetTextColor(Color.Black);
+                }
+            });
+            
+        }
+
+        public void Log(string log) {
+            RunOnUiThread(() =>
+            {
+                int startIndex = status.Text.Length - 2000;
+                if (startIndex < 0) startIndex = 0;
+                status.Text = status.Text.Substring(startIndex) + "Time: " + Utils.UnixTimeNow() + ", " + log + "\n";
+                mscroll.Post(() =>
+                {
+                    mscroll.FullScroll(FocusSearchDirection.Down);
+                });
+            });
+        }
+
+        protected override void OnStop()
+        {
+            base.OnStop();
+        }
+
+        protected override void OnPause()
+        {
+            base.OnPause();
+        }
+
+        protected override void OnDestroy()
+        {
+            runningFlag = false;
+            base.OnDestroy();
+        }
+
+        public Dictionary<string, string> getSharpLinkConf()
+        {
+            if (!mConnection.IsConnected)
+                return null;
+            return mConnection.Binder.GetSharpLinkConfig();
         }
 
     }

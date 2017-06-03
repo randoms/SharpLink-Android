@@ -28,6 +28,8 @@ namespace sharplink
 		{
 			global::SharpLink_android.Resource.String.ApplicationName = global::sharplink.Resource.String.ApplicationName;
 			global::SharpLink_android.Resource.String.Hello = global::sharplink.Resource.String.Hello;
+			global::SharpTox_android.Resource.String.ApplicationName = global::sharplink.Resource.String.ApplicationName;
+			global::SharpTox_android.Resource.String.Hello = global::sharplink.Resource.String.Hello;
 			global::Skynet_android.Resource.String.ApplicationName = global::sharplink.Resource.String.ApplicationName;
 			global::Skynet_android.Resource.String.Hello = global::sharplink.Resource.String.Hello;
 		}

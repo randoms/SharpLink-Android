@@ -495,6 +495,35 @@ namespace SkynetAndroid.Base
 			}, TaskCreationOptions.LongRunning);
 		}
 
+        public async Task<bool> HandShake(ToxId target) {
+            string reqid = Guid.NewGuid().ToString();
+            Utils.Utils.Log("Event: Start Handshake , ReqId: " + reqid, true);
+            bool status;
+            var res = await sendRequest(target, new ToxRequest
+            {
+                url = "/handshake",
+                method = "get",
+                uuid = reqid,
+                fromNodeId = reqid,
+                fromToxId = tox.Id.ToString(),
+                toToxId = target.ToString(),
+                toNodeId = "",
+                time = Utils.Utils.UnixTimeNow(),
+            }, out status);
+
+            if (res == null)
+            {
+                Utils.Utils.Log("Event: Handshake Failed, ReqId: " + reqid, true);
+                return false;
+            }
+            else
+            {
+                Utils.Utils.Log("Event: Handshake Success, ReqId: " + reqid, true);
+                Console.WriteLine("Event: Handshake Success, ReqId: " + reqid);
+                return true;
+            }
+        }
+
 		public void stop ()
 		{
 			tox.Stop ();

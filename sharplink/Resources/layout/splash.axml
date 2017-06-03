@@ -8,20 +8,11 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="#FFFFFF">
-
-  <ImageView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:src="@drawable/icon"
-      android:layout_centerHorizontal="true"
-      android:layout_centerVertical="true"
-      android:id="@+id/image"/>
-  <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="SharpLink"
-      android:textSize="24dp"
-      android:layout_centerHorizontal="true"
-      android:layout_below="@id/image"/>
-
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:id="@+id/image" />
 </RelativeLayout>

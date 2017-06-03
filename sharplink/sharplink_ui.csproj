@@ -65,6 +65,9 @@
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\SharpLinkBinder.cs" />
+    <Compile Include="Services\SharpLinkConnection.cs" />
+    <Compile Include="Services\SharpLinkService.cs" />
     <Compile Include="Splash.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -100,6 +103,10 @@
     <ProjectReference Include="..\SharpLink-android\SharpLink-android.csproj">
       <Project>{3eed2967-a675-4b02-932b-8007d080b86f}</Project>
       <Name>SharpLink-android</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpTox-android\SharpTox-android.csproj">
+      <Project>{435275F9-05F2-4DE0-A240-0EAF37E3D116}</Project>
+      <Name>SharpTox-android</Name>
     </ProjectReference>
     <ProjectReference Include="..\Skynet-android\Skynet-android.csproj">
       <Project>{cc7ee1a9-e198-4e29-bde4-9d4cfe7c4c53}</Project>
