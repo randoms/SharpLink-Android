@@ -29,8 +29,8 @@ namespace sharplink
                 Thread.Sleep(1000);
                 Intent intent = new Intent(this, typeof(MainActivity));
                 StartActivity(intent);
-                Finish();
                 OverridePendingTransition(Android.Resource.Animation.FadeIn, Android.Resource.Animation.FadeOut);
+                Finish();
             });
         }
     }
