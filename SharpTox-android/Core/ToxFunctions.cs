@@ -1,3 +1,4 @@
+using SharpToxAndroid.Core.SharpTox.Core;
 using System;
 using System.Runtime.InteropServices;
 
@@ -246,6 +247,9 @@ namespace SharpToxAndroid.Core
 
         [DllImport(dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "tox_group_peer_pubkey")]
         internal static extern int GroupPeerPubkey(ToxHandle tox, int groupnumber, int peernumber, byte[] pk);
+
+        [DllImport(dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "tox_log_cb")]
+        internal static extern void ToxLogCallback(ToxHandle tox, ToxLogLevel level, string file, uint line, string func, string message, IntPtr userdata);
 
         #region Register callback functions
         [DllImport(dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "tox_callback_friend_request")]

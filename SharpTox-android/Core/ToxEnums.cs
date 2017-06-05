@@ -746,4 +746,13 @@
         ToxSave,
         SecretKey
     }
+
+    internal enum ToxLogLevel
+    {
+        ToxLogLevelTrace,
+        ToxLogLevelTraceDebug,
+        ToxLogLevelTraceInfo,
+        ToxLogLevelTraceDebugWarning,
+        ToxLogLevelTraceDebugError,
+    }
 }

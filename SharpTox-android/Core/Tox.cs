@@ -3,6 +3,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using SharpToxAndroid.Encryption;
+using SharpToxAndroid.Core.SharpTox.Core;
 
 namespace SharpToxAndroid.Core
 {
