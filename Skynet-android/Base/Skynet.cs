@@ -299,88 +299,131 @@ namespace SkynetAndroid.Base
 			Utils.Utils.Log ("Event: End callbacks");
 		}
 
-		public bool sendMsg (ToxKey toxkey, byte[] msg)
+		public bool sendMsg (ToxKey toxkey, byte[] msg, int timeout=0)
 		{
-			return sendMsg (new ToxId (toxkey.GetBytes (), 100), msg);
+			return sendMsg (new ToxId (toxkey.GetBytes (), 100), msg, timeout);
 		}
 
-		public bool sendMsg (ToxId toxid, byte[] msg)
+		public bool sendMsg (ToxId toxid, byte[] msg, int timeout=0)
 		{
-			try{
-				lock (sendLock) {
+            try
+            {
+                lock (sendLock)
+                {
 
-					// check if this message is send to itself
-					if (toxid.ToString () == tox.Id.ToString ()) {
-						return false; // this is not allowed
-					}
+                    Utils.Utils.Log("OK0", true);
+                    // check if this message is send to itself
+                    if (toxid.ToString() == tox.Id.ToString())
+                    {
+                        return false; // this is not allowed
+                    }
 
-					// wait toxcore online
-					int maxOnlineWaitTime = 20000; // 20s
-					int onlineWaitCount = 0;
-					while (!tox.IsConnected) {
-						Thread.Sleep (10);
-						onlineWaitCount += 10;
-						if (onlineWaitCount > maxOnlineWaitTime)
-							return false;
-					}
+                    // wait toxcore online
+                    int maxOnlineWaitTime = 200000; // 200s
+                    int onlineWaitCount = 0;
+                    while (!tox.IsConnected)
+                    {
+                        Thread.Sleep(10);
+                        onlineWaitCount += 10;
+                        if (onlineWaitCount > maxOnlineWaitTime)
+                            return false;
+                    }
 
-					ToxKey toxkey = toxid.PublicKey;
-					int friendNum = tox.GetFriendByPublicKey (toxkey);
-					if (friendNum == -1) {
-						int res = tox.AddFriend (toxid, "add friend");
-						if (res != (int)ToxErrorFriendAdd.Ok)
-							return false;
-						friendNum = tox.GetFriendByPublicKey (toxkey);
-					}
+                    ToxKey toxkey = toxid.PublicKey;
+                    int friendNum = tox.GetFriendByPublicKey(toxkey);
+                    if (friendNum == -1)
+                    {
+                        int res = tox.AddFriend(toxid, "add friend");
+                        if (res != (int)ToxErrorFriendAdd.Ok)
+                            return false;
+                        friendNum = tox.GetFriendByPublicKey(toxkey);
+                    }
 
-					int waitCount = 0;
-					int maxCount = 500;
-					if (connectedList.IndexOf (toxkey.GetString ()) == -1)
-						maxCount = 200 * 1000; // first time wait for 200s
-					while (tox.GetFriendConnectionStatus (friendNum) == ToxConnectionStatus.None && waitCount < maxCount) {
-						if (waitCount % 1000 == 0)
-							Utils.Utils.Log ("Event: target is offline " + waitCount / 1000, true);
-						waitCount += 10;
-						Thread.Sleep (10);
-					}
-					if (waitCount == maxCount) {
-						Utils.Utils.Log ("Event: Connect Failed");
-						connectedList.Remove (toxkey.GetString ());
-						return false;
-					}
-					if (connectedList.IndexOf (toxkey.GetString ()) == -1) {
-						connectedList.Add (toxkey.GetString ());
-					}
+                    Utils.Utils.Log("OK1", true);
 
-					var mesError = new ToxErrorFriendCustomPacket ();
-					// retry send message
-					int retryCount = 0;
-					while (retryCount < 60) {
-						byte[] msgToSend = new byte[msg.Length + 1];
-						msgToSend [0] = 170; // The first byte must be in the range 160-191.
-						msg.CopyTo (msgToSend, 1);
-						bool msgRes = tox.FriendSendLosslessPacket (friendNum, msgToSend, out mesError);
-						if (msgRes) {
-							break;
-						}
+                    int waitCount = 0;
+                    int maxCount = 500;
+                    if (connectedList.IndexOf(toxkey.GetString()) == -1)
+                        maxCount = 200 * 1000; // first time wait for 200s
+                    while (tox.GetFriendConnectionStatus(friendNum) == ToxConnectionStatus.None && waitCount < maxCount)
+                    {
+                        if (waitCount % 1000 == 0)
+                        {
+                            Utils.Utils.Log("Event: target is offline " + waitCount / 1000, true);
+                            if (timeout != 0 && waitCount / 1000 > timeout)
+                            {
+                                connectedList.Remove(toxkey.GetString());
+                                tox.DeleteFriend(friendNum);
+                                return false;
+                            }
+                        }
+                        waitCount += 10;
+                        Thread.Sleep(10);
+                    }
 
-						Utils.Utils.Log ("Event: " + mesError);
+                    Utils.Utils.Log("OK2", true);
+                    if (waitCount == maxCount)
+                    {
+                        Utils.Utils.Log("Event: Connect Failed", true);
+                        connectedList.Remove(toxkey.GetString());
+                        tox.DeleteFriend(friendNum);
+                        return false;
+                    }
+                    if (connectedList.IndexOf(toxkey.GetString()) == -1)
+                    {
+                        connectedList.Add(toxkey.GetString());
+                    }
+
+                    var mesError = new ToxErrorFriendCustomPacket();
+                    // retry send message
+                    int retryCount = 0;
+                    Utils.Utils.Log("OK3", true);
+                    while (retryCount < 60)
+                    {
+                        byte[] msgToSend = new byte[msg.Length + 1];
+                        msgToSend[0] = 170; // The first byte must be in the range 160-191.
+                        msg.CopyTo(msgToSend, 1);
+                        bool msgRes = tox.FriendSendLosslessPacket(friendNum, msgToSend, out mesError);
+                        if (msgRes)
+                        {
+                            break;
+                        }
+
+                        Utils.Utils.Log("Event: " + mesError, true);
                         Console.WriteLine("Event: " + mesError);
-                        if (mesError == ToxErrorFriendCustomPacket.SendQ) {
-							Thread.Sleep (10);
-							continue;
-						}
-						retryCount++;
-						Thread.Sleep (100);
+                        if (mesError == ToxErrorFriendCustomPacket.SendQ)
+                        {
+                            Thread.Sleep(10);
+                            continue;
+                        }
+                        retryCount++;
+                        Thread.Sleep(100);
 
-					}
-					if (retryCount == 60)
-						return false;
-					return true;
-				}
-			}catch(ObjectDisposedException){
-				return false;
-			}
+                    }
+
+                    Utils.Utils.Log("OK4", true);
+                    if (retryCount == 60)
+                    {
+                        Utils.Utils.Log("OK5", true);
+                        connectedList.Remove(toxkey.GetString());
+                        tox.DeleteFriend(friendNum);
+                        Utils.Utils.Log("OK6", true);
+                        return false;
+                    }
+
+                    Utils.Utils.Log("OK7", true);
+
+                    return true;
+                }
+            }
+            //catch (ObjectDisposedException)
+            //{
+            //    return false;
+            //}
+            catch (Exception e) {
+                Utils.Utils.Log(e.StackTrace, true);
+                return false;
+            }
 
 		}
 
@@ -422,7 +465,7 @@ namespace SkynetAndroid.Base
 			}
 		}
 
-		public Task<ToxResponse> sendRequest (ToxId toxid, ToxRequest req, out bool status)
+		public Task<ToxResponse> sendRequest (ToxId toxid, ToxRequest req, out bool status, int timeout=20)
 		{
 			try{
 				if (toxid.ToString () == tox.Id.ToString ()) {
@@ -471,7 +514,8 @@ namespace SkynetAndroid.Base
 					content = mcontent,
 					totalSize = (uint)reqContent.Length,
 					startIndex = (uint)(i * MAX_MSG_LENGTH),
-				}.toBytes ());
+				}.toBytes (), timeout);
+
 				if (!res) {
 					status = false;
 					return Task.Factory.StartNew<ToxResponse> (() => {
@@ -485,6 +529,22 @@ namespace SkynetAndroid.Base
 			Utils.Utils.Log ("Event: return async, ReqId: " + req.uuid);
             
 			return Task.Factory.StartNew (() => {
+                Task.Run(() =>
+                {
+                    // timeout count thread
+                    Thread.Sleep(timeout * 1000);
+                    if (mPendingReqList.Keys.Contains(req.uuid)) {
+                        mRes = null;
+                        mPendingReqList.Remove(req.uuid);
+                        lock (reslock)
+                        {
+                            resFlag = true;
+                            Utils.Utils.Log("Event: Callback Timeout, ReqId: " + req.uuid);
+                            Monitor.PulseAll(reslock);
+                            Utils.Utils.Log("Event: Pulse Lock, ReqId: " + req.uuid);
+                        }
+                    }
+                });
 				Utils.Utils.Log ("Event: Response locked, ReqId: " + req.uuid);
 				lock (reslock) {
 					while (!resFlag)
@@ -495,7 +555,7 @@ namespace SkynetAndroid.Base
 			}, TaskCreationOptions.LongRunning);
 		}
 
-        public async Task<bool> HandShake(ToxId target) {
+        public async Task<bool> HandShake(ToxId target, int timeout=0) {
             string reqid = Guid.NewGuid().ToString();
             Utils.Utils.Log("Event: Start Handshake , ReqId: " + reqid, true);
             bool status;
@@ -509,7 +569,7 @@ namespace SkynetAndroid.Base
                 toToxId = target.ToString(),
                 toNodeId = "",
                 time = Utils.Utils.UnixTimeNow(),
-            }, out status);
+            }, out status, timeout);
 
             if (res == null)
             {

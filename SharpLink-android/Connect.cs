@@ -73,7 +73,7 @@ namespace SharpLinkAndroid
                 Task.Run(() =>
                 {
                     while (runningFlag) {
-                        IsConnected = mSkynet.HandShake(new ToxId(targetToxId)).GetAwaiter().GetResult();
+                        IsConnected = mSkynet.HandShake(new ToxId(targetToxId), 10).GetAwaiter().GetResult();
                         Thread.Sleep(20 * 1000);
                     }
                 });

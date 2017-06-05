@@ -14,6 +14,7 @@ using Android.Graphics;
 using System.Threading;
 using System.Collections.Generic;
 using Android.Media;
+using Android.Support.V4.App;
 
 namespace sharplink
 {
@@ -99,15 +100,35 @@ namespace sharplink
         }
 
         private void notify() {
-            AudioManager manager = (AudioManager)GetSystemService(AudioService);
-            manager.SetStreamVolume(Stream.Music, 100, 0);
+            //AudioManager manager = (AudioManager)GetSystemService(AudioService);
+            //int volume = manager.GetStreamVolume(Stream.Notification);
+            //manager.SetStreamVolume(Stream.Notification, 100, 0);
 
-            var notification = RingtoneManager
-                    .GetDefaultUri(RingtoneType.Notification);
 
-            MediaPlayer player = MediaPlayer.Create(this, notification);
-            player.Looping = false;
-            player.Start();
+            //var notification = RingtoneManager
+            //        .GetDefaultUri(RingtoneType.Notification);
+
+            //MediaPlayer player = MediaPlayer.Create(this, notification);
+            //player.Looping = false;
+            //player.Start();
+            //while (player.IsPlaying) {
+            //    Thread.Sleep(500);
+            //}
+            //manager.SetStreamVolume(Stream.Notification, volume, 0);
+            //Define Notification Manager
+            NotificationManager notificationManager = (NotificationManager)GetSystemService(NotificationService);
+
+            //Define sound URI
+            var soundUri = RingtoneManager.GetDefaultUri(RingtoneType.Notification);
+
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+                    .SetSmallIcon(Resource.Drawable.Icon)
+                    .SetContentTitle("SharpLink")
+                    .SetContentText("SharpLink连接状态改变")
+                    .SetSound(soundUri, (int)Stream.Notification); //This sets the sound to play
+
+            //Display notification
+            notificationManager.Notify(0, mBuilder.Build());
         }
 
         private void startServer(string toxid, string port) {
