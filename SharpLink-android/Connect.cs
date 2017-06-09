@@ -175,7 +175,15 @@ namespace SharpLinkAndroid
                                             if (!closeFlag && clientSocket.Connected)
                                             {
                                                 closeFlag = true;
-                                                clientSocket.Shutdown(SocketShutdown.Both);
+                                                try
+                                                {
+                                                    clientSocket.Shutdown(SocketShutdown.Both);
+                                                }
+                                                catch (SocketException ex)
+                                                {
+                                                    Utils.Log("Event ERROR: " + ex.Message);
+                                                }
+
                                                 clientSocket.Close();
                                                 if (mlink != null)
                                                     Utils.Log("Event: Close Connection, ClientId: " + mlink.clientId + ", ConnectId: " + tempConnectId);
@@ -190,7 +198,14 @@ namespace SharpLinkAndroid
                                             if (!res && !closeFlag && clientSocket.Connected)
                                             {
                                                 closeFlag = true;
-                                                clientSocket.Shutdown(SocketShutdown.Both);
+                                                try
+                                                {
+                                                    clientSocket.Shutdown(SocketShutdown.Both);
+                                                }
+                                                catch (SocketException ex)
+                                                {
+                                                    Utils.Log("Event ERROR: " + ex.Message);
+                                                }
                                                 clientSocket.Close();
                                                 mlink.CloseRemote();
                                                 mlink.Close();
@@ -214,7 +229,14 @@ namespace SharpLinkAndroid
                                         if (!closeFlag && clientSocket.Connected)
                                         {
                                             closeFlag = true;
-                                            clientSocket.Shutdown(SocketShutdown.Both);
+                                            try
+                                            {
+                                                clientSocket.Shutdown(SocketShutdown.Both);
+                                            }
+                                            catch (SocketException ex)
+                                            {
+                                                Utils.Log("Event ERROR: " + ex.Message);
+                                            }
                                             clientSocket.Close();
                                             if (mlink != null)
                                                 Utils.Log("Event: Close Connection, ClientId: " + mlink.clientId + ", ConnectId: " + tempConnectId);
@@ -244,7 +266,14 @@ namespace SharpLinkAndroid
                                         if (!closeFlag && clientSocket.Connected)
                                         {
                                             closeFlag = true;
-                                            clientSocket.Shutdown(SocketShutdown.Both);
+                                            try
+                                            {
+                                                clientSocket.Shutdown(SocketShutdown.Both);
+                                            }
+                                            catch (SocketException ex)
+                                            {
+                                                Utils.Log("Event ERROR: " + ex.Message);
+                                            }
                                             clientSocket.Close();
                                             Utils.Log("Event: Close Connection, ClientId: " + mlink.clientId + ", ConnectId: " + tempConnectId);
                                         }
@@ -256,7 +285,14 @@ namespace SharpLinkAndroid
                                     if (!closeFlag && clientSocket.Connected)
                                     {
                                         closeFlag = true;
-                                        clientSocket.Shutdown(SocketShutdown.Both);
+                                        try
+                                        {
+                                            clientSocket.Shutdown(SocketShutdown.Both);
+                                        }
+                                        catch (SocketException ex)
+                                        {
+                                            Utils.Log("Event ERROR: " + ex.Message);
+                                        }
                                         clientSocket.Close();
                                         Utils.Log("Event: Close Connection, ClientId: " + mlink.clientId + ", ConnectId: " + tempConnectId);
                                     }
@@ -269,7 +305,14 @@ namespace SharpLinkAndroid
                                 if (!closeFlag && clientSocket.Connected)
                                 {
                                     closeFlag = true;
-                                    clientSocket.Shutdown(SocketShutdown.Both);
+                                    try
+                                    {
+                                        clientSocket.Shutdown(SocketShutdown.Both);
+                                    }
+                                    catch (SocketException ex)
+                                    {
+                                        Utils.Log("Event ERROR: " + ex.Message);
+                                    }
                                     clientSocket.Close();
                                     Utils.Log("Event: Close Connection, ClientId: null" + ", ConnectId: " + tempConnectId);
                                 }
@@ -333,7 +376,15 @@ namespace SharpLinkAndroid
                                     if (!closeFlag && mClientSocket.Connected)
                                     {
                                         closeFlag = true;
-                                        mClientSocket.Shutdown(SocketShutdown.Both);
+                                        try
+                                        {
+                                            mClientSocket.Shutdown(SocketShutdown.Both);
+                                        }
+                                        catch (SocketException ex)
+                                        {
+                                            Utils.Log("Event: " + ex.Message);
+                                        }
+
                                         mClientSocket.Close();
                                         Utils.Log("Event: Close Socket" + ipstr + " " + port + " mLinkID " + mlink.clientId);
                                     }
@@ -344,7 +395,14 @@ namespace SharpLinkAndroid
                                 if (!closeFlag && mClientSocket.Connected)
                                 {
                                     closeFlag = true;
-                                    mClientSocket.Shutdown(SocketShutdown.Both);
+                                    try
+                                    {
+                                        mClientSocket.Shutdown(SocketShutdown.Both);
+                                    }
+                                    catch (SocketException ex)
+                                    {
+                                        Utils.Log("Event: " + ex.Message);
+                                    }
                                     mClientSocket.Close();
                                     Utils.Log("Event: Close Socket" + ipstr + " " + port + " mLinkID " + mlink.clientId);
                                 }
@@ -374,7 +432,14 @@ namespace SharpLinkAndroid
                                             {
                                                 Utils.Log("Event: Close Connection, Clientid: " + mlink.clientId);
                                                 closeFlag = true;
-                                                mClientSocket.Shutdown(SocketShutdown.Both);
+                                                try
+                                                {
+                                                    mClientSocket.Shutdown(SocketShutdown.Both);
+                                                }
+                                                catch (SocketException ex)
+                                                {
+                                                    Utils.Log("Event: " + ex.Message);
+                                                }
                                                 mClientSocket.Close();
                                             }
                                             mlink.CloseRemote();
@@ -392,7 +457,14 @@ namespace SharpLinkAndroid
                                             if (!closeFlag && mClientSocket.Connected)
                                             {
                                                 closeFlag = true;
-                                                mClientSocket.Shutdown(SocketShutdown.Both);
+                                                try
+                                                {
+                                                    mClientSocket.Shutdown(SocketShutdown.Both);
+                                                }
+                                                catch (SocketException ex)
+                                                {
+                                                    Utils.Log("Event: " + ex.Message);
+                                                }
                                                 mClientSocket.Close();
                                                 mlink.Close();
                                                 Utils.Log("Event: Tox send message failed, Clientid: " + mlink.clientId);
@@ -414,7 +486,14 @@ namespace SharpLinkAndroid
                                         if (!closeFlag && mClientSocket.Connected)
                                         {
                                             closeFlag = true;
-                                            mClientSocket.Shutdown(SocketShutdown.Both);
+                                            try
+                                            {
+                                                mClientSocket.Shutdown(SocketShutdown.Both);
+                                            }
+                                            catch (SocketException ex)
+                                            {
+                                                Utils.Log("Event: " + ex.Message);
+                                            }
                                             mClientSocket.Close();
                                             Utils.Log("Event: Close Connection, ClientId: " + mlink.clientId);
                                         }

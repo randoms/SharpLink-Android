@@ -81,16 +81,6 @@ namespace SkynetAndroid.Utils
             return res;
         }
 
-        //private static TextView mlogView;
-        //private static ScrollView mScrollView;
-        //private static Activity mActivity;
-
-        //public static void setLogFile(TextView logView, ScrollView scrollView, Activity main){
-        //    mlogView = logView;
-        //    mScrollView = scrollView;
-        //    mActivity = main;
-        //}
-
         private static Action<string> logHandler;
         public static void setLog(Action<string> mlog)
         {
@@ -114,6 +104,7 @@ namespace SkynetAndroid.Utils
         public static void Log(string detail, bool force)
         {
             logHandler?.Invoke(detail);
+            Console.WriteLine(detail);
         }
 
         public static string GetLocalIPAddress()

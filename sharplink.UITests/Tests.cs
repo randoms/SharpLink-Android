@@ -8,29 +8,29 @@ using Xamarin.UITest.Queries;
 
 namespace sharplink.UITests
 {
-	[TestFixture]
-	public class Tests
-	{
-		AndroidApp app;
+    [TestFixture]
+    public class Tests
+    {
+        AndroidApp app;
 
-		[SetUp]
-		public void BeforeEachTest ()
-		{
-			app = ConfigureApp.Android.StartApp ();
-		}
+        [SetUp]
+        public void BeforeEachTest()
+        {
+            app = ConfigureApp.Android.StartApp();
+        }
 
-		[Test]
-		public void ClickingButtonTwiceShouldChangeItsLabel ()
-		{
-			Func<AppQuery, AppQuery> MyButton = c => c.Button ("myButton");
+        [Test]
+        public void ClickingButtonTwiceShouldChangeItsLabel()
+        {
+            Func<AppQuery, AppQuery> MyButton = c => c.Button("myButton");
 
-			app.Tap (MyButton);
-			app.Tap (MyButton);
-			AppResult[] results = app.Query (MyButton);
-			app.Screenshot ("Button clicked twice.");
+            app.Tap(MyButton);
+            app.Tap(MyButton);
+            AppResult[] results = app.Query(MyButton);
+            app.Screenshot("Button clicked twice.");
 
-			Assert.AreEqual ("2 clicks!", results [0].Text);
-		}
-	}
+            Assert.AreEqual("2 clicks!", results[0].Text);
+        }
+    }
 }
 

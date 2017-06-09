@@ -44,7 +44,7 @@ namespace sharplink.Services
                 port = newPort;
                 Task.Run(() =>
                 {
-                    mSharpLink.Connect(new string[] { "23232", toxid, "192.168.0.123", port });
+                    mSharpLink.Connect(new string[] { "23232", toxid, "127.0.0.1", port });
                 });
             }
             return mBinder;
@@ -73,7 +73,7 @@ namespace sharplink.Services
                 port = newPort;
                 Task.Run(() =>
                 {
-                    mSharpLink.Connect(new string[] { "23232", toxid, "192.168.0.123", port });
+                    mSharpLink.Connect(new string[] { "23232", toxid, "127.0.0.1", port });
                 });
             }
             return StartCommandResult.RedeliverIntent;
