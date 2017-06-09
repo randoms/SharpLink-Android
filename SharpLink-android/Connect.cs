@@ -125,8 +125,20 @@ namespace SharpLinkAndroid
                 {
                     while (runningFlag)
                     {
-                        mSkynet.HandShake(new ToxId(targetToxId), 10).GetAwaiter().GetResult();
-                        Thread.Sleep(200 * 1000);
+                        bool IsConnected = mSkynet.HandShake(new ToxId(targetToxId)).GetAwaiter().GetResult();
+                        if (!IsConnected)
+                        {
+                            var toxid = new ToxId(targetToxId);
+                            ToxKey toxkey = toxid.PublicKey;
+                            int friendNum = mSkynet.tox.GetFriendByPublicKey(toxkey);
+                            if (friendNum != -1) {
+                                mSkynet.tox.DeleteFriend(friendNum);
+                                Utils.Log("Event: can not connect, resend friend request");
+                            }
+                                
+                            mSkynet.HandShake(new ToxId(targetToxId)).GetAwaiter().GetResult();
+                        }
+                        Thread.Sleep(60 * 1000);
                     }
                 });
 
