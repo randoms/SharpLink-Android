@@ -21,7 +21,8 @@ namespace SkynetAndroid.Models
         public string toToxId { get; set; }
         public long time { get; set; }
 
-        public ToxRequest() {
+        public ToxRequest()
+        {
             time = 0;
         }
 
@@ -63,10 +64,11 @@ namespace SkynetAndroid.Models
                 {
                     res = serializer.Deserialize<ToxRequest>(reader);
                 }
-                catch {
+                catch
+                {
                     res = null;
                 }
-                
+
             }
             ms.Close();
             return res;

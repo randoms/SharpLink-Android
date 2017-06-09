@@ -25,7 +25,8 @@ namespace sharplink
             Window.SetFlags(WindowManagerFlags.Fullscreen,
                     WindowManagerFlags.Fullscreen);
             SetContentView(Resource.Layout.splash);
-            Task.Run(() => {
+            Task.Run(() =>
+            {
                 Thread.Sleep(1000);
                 Intent intent = new Intent(this, typeof(MainActivity));
                 StartActivity(intent);

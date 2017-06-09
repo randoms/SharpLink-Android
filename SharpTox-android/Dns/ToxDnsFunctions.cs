@@ -6,7 +6,7 @@ namespace SharpToxAndroid.Dns
 {
     internal static class ToxDnsFunctions
     {
-		const string dll = "libtoxdns.so";
+        const string dll = "libtoxdns.so";
 
         [DllImport(dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "tox_dns3_new")]
         internal static extern ToxDnsHandle New(byte[] publicKey);

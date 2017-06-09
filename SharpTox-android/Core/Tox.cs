@@ -3,7 +3,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using SharpToxAndroid.Encryption;
-using SharpToxAndroid.Core.SharpTox.Core;
 
 namespace SharpToxAndroid.Core
 {
@@ -385,7 +384,7 @@ namespace SharpToxAndroid.Core
             _cancelTokenSource = new CancellationTokenSource();
             _running = true;
 
-            Task.Factory.StartNew(async () =>
+            Task.Factory.StartNew(() =>
             {
                 while (_running)
                 {
@@ -393,7 +392,7 @@ namespace SharpToxAndroid.Core
                         break;
 
                     int delay = DoIterate();
-                    await Task.Delay(delay);
+                    Thread.Sleep(delay);
                 }
             }, _cancelTokenSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
         }
@@ -1038,7 +1037,7 @@ namespace SharpToxAndroid.Core
 
             return null;
         }
-        
+
         /// <summary>
         /// Send a file transmission request.
         /// </summary>

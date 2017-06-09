@@ -455,7 +455,7 @@
         /// The function returned successfully.
         /// </summary>
         Ok,
-        
+
         /// <summary>
         /// The friend number passed did not designate a valid friend.
         /// </summary>
@@ -609,7 +609,7 @@
         /// The function returned successfully.
         /// </summary>
         Ok,
-        
+
         /// <summary>
         /// The friend number passed did not designate a valid friend.
         /// </summary>

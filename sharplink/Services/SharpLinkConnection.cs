@@ -18,7 +18,8 @@ namespace sharplink.Services
         public SharpLinkBinder Binder { get; private set; }
         private MainActivity client;
 
-        public SharpLinkConnection(MainActivity client) {
+        public SharpLinkConnection(MainActivity client)
+        {
             IsConnected = false;
             Binder = null;
             this.client = client;

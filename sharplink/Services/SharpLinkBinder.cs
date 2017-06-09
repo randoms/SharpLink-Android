@@ -22,11 +22,13 @@ namespace sharplink.Services
             this.mService = mService;
         }
 
-        public void setClient(MainActivity client) {
+        public void setClient(MainActivity client)
+        {
             this.client = client;
         }
 
-        public void Log(string log) {
+        public void Log(string log)
+        {
             client?.Log(log);
         }
 
@@ -35,7 +37,8 @@ namespace sharplink.Services
             return mService.IsConnected();
         }
 
-        public Dictionary<string, string> GetSharpLinkConfig() {
+        public Dictionary<string, string> GetSharpLinkConfig()
+        {
             Dictionary<string, string> res = new Dictionary<string, string>() {
                 { "toxid", mService.toxid},
                 { "port", mService.port},

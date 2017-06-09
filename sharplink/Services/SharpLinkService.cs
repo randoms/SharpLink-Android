@@ -38,12 +38,13 @@ namespace sharplink.Services
             string newPort = intent.GetStringExtra("port");
             mBinder = new SharpLinkBinder(this);
             Utils.setLog(mBinder.Log);
-            if (toxid != newToxid || port != newPort) {
+            if (toxid != newToxid || port != newPort)
+            {
                 toxid = newToxid;
                 port = newPort;
                 Task.Run(() =>
                 {
-                    mSharpLink.Connect(new string[] { "23232", toxid, "127.0.0.1", port });
+                    mSharpLink.Connect(new string[] { "23232", toxid, "192.168.0.123", port });
                 });
             }
             return mBinder;
@@ -72,13 +73,14 @@ namespace sharplink.Services
                 port = newPort;
                 Task.Run(() =>
                 {
-                    mSharpLink.Connect(new string[] { "23232", toxid, "127.0.0.1", port });
+                    mSharpLink.Connect(new string[] { "23232", toxid, "192.168.0.123", port });
                 });
             }
             return StartCommandResult.RedeliverIntent;
         }
 
-        public bool IsConnected() {
+        public bool IsConnected()
+        {
             return mSharpLink.IsConnected;
         }
     }

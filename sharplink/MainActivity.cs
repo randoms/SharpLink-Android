@@ -18,9 +18,9 @@ using Android.Support.V4.App;
 
 namespace sharplink
 {
-	[Activity (Theme = "@style/AppTheme", Label = "SharpLink", Icon = "@drawable/icon")]
-	public class MainActivity : Activity
-	{
+    [Activity(Theme = "@style/AppTheme", Label = "SharpLink", Icon = "@drawable/icon")]
+    public class MainActivity : Activity
+    {
         private SharpLinkAndroid.Connection mSharpLink;
         Button button;
         ScrollView mscroll;
@@ -32,12 +32,12 @@ namespace sharplink
         private SharpLinkConnection mConnection;
         bool runningFlag = true;
 
-        protected override void OnCreate (Bundle bundle)
-		{
-			base.OnCreate (bundle);
+        protected override void OnCreate(Bundle bundle)
+        {
+            base.OnCreate(bundle);
 
-			// Set our view from the "main" layout resource
-			SetContentView (Resource.Layout.Main);
+            // Set our view from the "main" layout resource
+            SetContentView(Resource.Layout.Main);
 
             // Get our button from the layout resource,
             // and attach an event to it
@@ -52,7 +52,7 @@ namespace sharplink
             string serverIDStr = prefs.GetString("toxid", "");
             string portStr = prefs.GetString("port", "");
 
-            if(mConnection == null)
+            if (mConnection == null)
             {
                 mConnection = new SharpLinkConnection(this);
             }
@@ -81,9 +81,11 @@ namespace sharplink
             // 开启定时确认连接状态
             Task.Run(() =>
             {
-                while (runningFlag) {
+                while (runningFlag)
+                {
                     Thread.Sleep(1000);
-                    if (!mConnection.IsConnected) {
+                    if (!mConnection.IsConnected)
+                    {
                         setOnlineStatus(false);
                         continue;
                     }
@@ -99,7 +101,8 @@ namespace sharplink
             });
         }
 
-        private void notify() {
+        private void notify()
+        {
             //AudioManager manager = (AudioManager)GetSystemService(AudioService);
             //int volume = manager.GetStreamVolume(Stream.Notification);
             //manager.SetStreamVolume(Stream.Notification, 100, 0);
@@ -131,7 +134,8 @@ namespace sharplink
             notificationManager.Notify(0, mBuilder.Build());
         }
 
-        private void startServer(string toxid, string port) {
+        private void startServer(string toxid, string port)
+        {
             Intent serviceToStart = new Intent(this, typeof(SharpLinkService));
             serviceToStart.PutExtra("toxid", toxid);
             serviceToStart.PutExtra("port", port);
@@ -157,14 +161,16 @@ namespace sharplink
         }
 
         bool previousOnlineStatus = false;
-        private void setOnlineStatus(bool status) {
+        private void setOnlineStatus(bool status)
+        {
             RunOnUiThread(() =>
             {
-                if (previousOnlineStatus != status) {
+                if (previousOnlineStatus != status)
+                {
                     notify();
                     previousOnlineStatus = status;
                 }
-                    
+
                 if (status)
                 {
                     button.SetTextColor(Color.Rgb(0x8B, 0xC3, 0x4A));
@@ -174,10 +180,11 @@ namespace sharplink
                     button.SetTextColor(Color.Black);
                 }
             });
-            
+
         }
 
-        public void Log(string log) {
+        public void Log(string log)
+        {
             RunOnUiThread(() =>
             {
                 int startIndex = status.Text.Length - 2000;

@@ -6,7 +6,7 @@ namespace SharpToxAndroid.Av
 {
     internal static class ToxAvFunctions
     {
-		const string dll = "libtoxav.so";
+        const string dll = "libtoxav.so";
 
         [DllImport(dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "toxav_version_major")]
         internal static extern uint VersionMajor();

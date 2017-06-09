@@ -14,7 +14,8 @@ namespace SkynetAndroid.Utils
 {
     public class Utils
     {
-        public static bool isValidGuid(string guid) {
+        public static bool isValidGuid(string guid)
+        {
             Guid mGuid;
             return Guid.TryParse(guid, out mGuid);
         }
@@ -48,7 +49,8 @@ namespace SkynetAndroid.Utils
             return (long)timeSpan.TotalMilliseconds;
         }
 
-        public static byte[] joinBytes(byte[] one, byte[] two) {
+        public static byte[] joinBytes(byte[] one, byte[] two)
+        {
             if (one == null)
                 return (byte[])two.Clone();
             if (two == null)
@@ -59,15 +61,17 @@ namespace SkynetAndroid.Utils
             return res;
         }
 
-        public static byte[] subArray(byte[] array, int startIndex) {
+        public static byte[] subArray(byte[] array, int startIndex)
+        {
             byte[] res = new byte[array.Length - startIndex];
-            for (int i = 0; i < res.Length; i++) {
+            for (int i = 0; i < res.Length; i++)
+            {
                 res[i] = array[startIndex + i];
             }
             return res;
         }
 
-        public static byte[] subArray(byte[] array,int startIndex, int length)
+        public static byte[] subArray(byte[] array, int startIndex, int length)
         {
             byte[] res = new byte[length];
             for (int i = startIndex; i < startIndex + length; i++)
@@ -88,11 +92,13 @@ namespace SkynetAndroid.Utils
         //}
 
         private static Action<string> logHandler;
-        public static void setLog(Action<string> mlog) {
+        public static void setLog(Action<string> mlog)
+        {
             logHandler = mlog;
         }
 
-		public static void Log(string detail) {
+        public static void Log(string detail)
+        {
             //#if (DEBUG)
             //mActivity.RunOnUiThread(() =>
             //{
@@ -111,16 +117,16 @@ namespace SkynetAndroid.Utils
         }
 
         public static string GetLocalIPAddress()
-		{
-			var host = Dns.GetHostEntry(Dns.GetHostName());
-			foreach (var ip in host.AddressList)
-			{
-				if (ip.AddressFamily == AddressFamily.InterNetwork)
-				{
-					return ip.ToString();
-				}
-			}
-			return "";
-		}
+        {
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    return ip.ToString();
+                }
+            }
+            return "";
+        }
     }
 }

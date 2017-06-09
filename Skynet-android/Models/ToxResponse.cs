@@ -19,9 +19,11 @@ namespace SkynetAndroid.Models
         public string toNodeId { get; set; }
         public string toToxId { get; set; }
 
-        public byte[] getBytes() {
+        public byte[] getBytes()
+        {
             MemoryStream ms = new MemoryStream();
-            using (BsonDataWriter writer = new BsonDataWriter(ms)) {
+            using (BsonDataWriter writer = new BsonDataWriter(ms))
+            {
                 JsonSerializer serializer = new JsonSerializer();
                 serializer.Serialize(writer, this);
             }
@@ -30,7 +32,8 @@ namespace SkynetAndroid.Models
             return res;
         }
 
-        public static ToxResponse fromBytes(byte[] data) {
+        public static ToxResponse fromBytes(byte[] data)
+        {
             MemoryStream ms = new MemoryStream(data);
             ToxResponse res;
             using (BsonDataReader reader = new BsonDataReader(ms))
